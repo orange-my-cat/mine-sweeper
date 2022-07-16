@@ -1,0 +1,10 @@
+.venv/Include/site/python3.9/greenlet/greenlet.h
+.venv/Lib/site-packages/distutils-precedence.pth
+.venv/Lib/site-packages/
+app/__pycache__/
+env/Lib/site-packages/
+env/Lib/site-packages/alembic/op.py
+env/
+unitTests/
+app/database.db
+app/database.db
