@@ -1,0 +1,111 @@
+body {
+    overflow: hidden;
+    background-color: #5a5c66;
+}
+
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.login-box {
+    height: 400px;
+    width: 400px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: white;
+    padding: 40px 20px;
+}
+
+.signin-heading {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.username,
+.password {
+    font-size: 18px;
+    margin-bottom: 2px;
+    padding: 0 25px;
+}
+
+#username,
+#password {
+    border: none;
+    margin: 0 25px;
+    width: 300px;
+    border-bottom: 1px solid black;
+}
+
+.password {
+    margin-top: 10px;
+}
+
+#username:focus,
+#password:focus {
+    outline: 0;
+}
+
+#remember_me {
+    margin: 10px 5px 10px 25px;
+}
+
+#submit {
+    margin: 10px 25px;
+    width: 300px;
+}
+
+.signup {
+    padding: 10px 0px;
+    margin: 0 25px;
+}
+
+.signup a,
+.signup span {
+    font-size: 15px;
+}
+
+.error {
+    color: red;
+    position: absolute;
+    top: -10px;
+    font-style: italic;
+}
+
+.error-container {
+    position: relative;
+    padding: 0 25px;
+}
+
+.return-container {
+    position: absolute;
+}
+
+#homepage {
+    position: relative;
+    color: gray;
+    top: -20px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+#homepage:hover {
+    display: inline-block;
+    text-decoration: underline;
+    -ms-transform: scale(1.02, 1.02);
+    -webkit-transform: scale(1.02, 1.02);
+    transform: scale(1.02, 1.02);
+    transition: all ease 0.4s;
+}
+
+@media screen and (max-width:540px) {
+    .login-box {
+        transform: scale(0.8);
+    }
+}

@@ -1,0 +1,246 @@
+.box {
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    font-size: 200%;
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.top {
+    background-color: white;
+    color: red;
+    border-radius: 5px;
+    font-size: 80%;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.box:hover {
+    transform: scale(1.02);
+    transition: all 0.4s ease;
+    background-color: rgb(205, 201, 201);
+}
+
+.topWrap {
+    margin: auto;
+    width: 440px;
+    height: 30px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: repeat(25, 14.6px);
+    grid-auto-flow: column;
+}
+
+.wrapper {
+    margin: auto;
+    width: 440px;
+    height: 440px;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: repeat(5, 80px);
+    grid-template-rows: repeat(5, 80px);
+    grid-auto-flow: column;
+}
+
+#count {
+    color: white;
+    text-align: center;
+}
+
+#results {
+    width: 50vw;
+    margin: auto;
+}
+
+#username {
+    cursor: context-menu;
+    border-radius: 20px;
+}
+
+#ansInput {
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.wrapper2 {
+    width: inherit;
+    display: flex;
+    border-radius: 10%;
+}
+
+.submitGlowRight {
+    animation: glow-correct 0.65s;
+}
+
+@keyframes glow-correct {
+    from {
+        box-shadow: 0 0 0 0 #fff;
+    }
+    to {
+        box-shadow: 0 0 15px 15px greenyellow, 0 0 18px 18px lightgreen;
+    }
+}
+
+.submitGlowWrong {
+    animation: glow-incorrect 0.65s;
+}
+
+@keyframes glow-incorrect {
+    from {
+        box-shadow: 0 0 0 0 #fff;
+    }
+    to {
+        box-shadow: 0 0 15px 15px rgb(231, 86, 110), 0 0 18px 18px rgb(68, 2, 2);
+    }
+}
+
+.wrapper2 button {
+    margin-left: -3px;
+}
+
+#ModalLabel.modal-title {
+    text-align: center;
+    font-size: 25px;
+}
+
+.btn-close {
+    margin-right: 50px;
+}
+
+h1 {
+    font-size: 35px;
+    text-align: center;
+}
+
+h4 {
+    font-size: 18px;
+    text-align: center;
+}
+
+.modal-content {
+    background-color: #5a5c66;
+    color: white;
+    text-align: center;
+}
+
+.modal-header {
+    background-color: #5a5c66;
+    text-align: center;
+    color: white;
+    margin: auto;
+}
+
+#myTab .nav-item {
+    border: 1px solid white;
+    color: white;
+}
+
+#myTab .nav-link {
+    color: white;
+}
+
+#myTab .nav-link.active {
+    color: black;
+}
+
+#self-result,
+#other-result {
+    background-color: white;
+}
+
+.btn-fb {
+    background-color: #4267b2 !important;
+    color: #ffffff;
+    border-color: #4267b2 !important;
+}
+
+.btn-fb:hover {
+    background-color: #ffffff !important;
+    color: #4267b2;
+}
+
+.btn-twitter {
+    background-color: #1da1f2 !important;
+    color: #ffffff;
+    border-color: #1da1f2 !important;
+}
+
+.btn-twitter:hover {
+    background-color: #ffffff !important;
+    color: #1da1f2;
+}
+
+.btn-copy-link {
+    background-color: #14171a !important;
+    color: #ffffff;
+    border-color: #14171a !important;
+}
+
+.btn-copy-link:hover {
+    background-color: #ffffff !important;
+    color: #14171a;
+}
+
+.invalid {
+    pointer-events: none;
+}
+
+#share-result button {
+    font-size: 30px;
+}
+
+@media (max-width: 769px) {
+    #results {
+        width: 80vw;
+    }
+}
+
+@media (max-width: 540px) {
+    .container-fluid {
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-left: 0;
+    }
+    .wrapper,
+    .topWrap,
+    .wrapper2 {
+        margin: auto;
+        width: 80vw;
+    }
+    .wrapper {
+        height: 80vw;
+        grid-gap: 5px;
+        grid-template-columns: repeat(5, 15vw);
+        grid-template-rows: repeat(5, 15vw);
+        margin-bottom: 5vh;
+    }
+    .topWrap {
+        height: 30px;
+        grid-gap: 2px;
+        grid-template-columns: repeat(25, 2.7vw);
+        margin: 2vh 0;
+        position: relative;
+        left: 2px;
+    }
+    .box {
+        height: 15vw;
+        line-height: 15vw;
+        font-size: 8vw;
+    }
+    #share-result button {
+        font-size: 20px;
+    }
+}
+
+.btn-close {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+}

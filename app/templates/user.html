@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Sweeper</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+
+    <!-- Bootstrap JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- SeedRandom-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <!-- Chart.js-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="static/index.css">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
+
+    <link rel="icon" href="../static/mine.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../static/mine.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../static/mine.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../static/mine.png">
+    <link rel="apple-touch-icon-precomposed" href="../static/mine.png">
+
+</head>
+
+<body style="background-color: #5a5c66;">
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v13.0" nonce="ClJxCz1B"></script>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- app name -->
+            <a class="navbar-brand" href="#">
+                <h4>Word Sweeper</h4>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#stats-modal" style="cursor:pointer" onclick="getPastData()">Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#tut-modal" style="cursor:pointer">Tutorial</a>
+                    </li>
+                </ul>
+
+                <form class="d-flex">
+                    <a class="btn btn-outline-warning me-2" id="username" href="">{{name}}</a>
+                    <a class="btn btn-outline-warning me-2" href="{{ url_for('logout') }}">Logout</a>
+                </form>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-lg container-sm">
+        <div class="d-flex justify-content-center m-4">
+            <div class="container-fluid">
+                <div>
+                    <h3 id="count">Guesses: 0</h3>
+                </div>
+                <div class="topWrap"></div>
+                <div class="wrapper"></div>
+                <div class="flag"></div>
+                <div id="results">
+                    <form class="input-group mt-3 col-xs-9 col-lg-6" autocomplete="off" id="submit-form">
+                        <div class="wrapper2">
+                            <input id="ansInput" type="text" class="form-control form-control-lg" autocomplete="off" maxlength="5" placeholder="Your guess here" aria-label="Your guess here" aria-describedby="button-addon2" oninput="this.value=this.value.toUpperCase()">
+                            <button class="btn btn-warning" type="button" id="button-addon2" onclick="getData()">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="submit-modal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ModalLabel0">Congratulations!! You got the right answer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="main-text">Press <i>Statistics</i> to see your previous score</div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stats-modal" data-bs-dismiss='modal' onclick="getPastData()">Statistics</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stats Modal -->
+                <div class="modal fade" id="stats-modal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ModalLabel1">Statistics</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm" id="mean_guesses"></div>
+                                    <div class="col-sm" id="rank_score"></div>
+                                    <div class="col-sm" id="no_of_attempts"></div>
+                                </div>
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="self-tab" data-bs-toggle="tab" data-bs-target="#self-result" type="button" role="tab" aria-controls="self-result" aria-selected="true">Your Result</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other-result" type="button" role="tab" aria-controls="other-result" aria-selected="false">Compare to Others</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="share-tab" data-bs-toggle="tab" data-bs-target="#share-result"
+                                          type="button" role="tab" aria-controls="share-result" aria-selected="false">Share on Social
+                                          Media</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="self-result" role="tabpanel" >
+                                        <div>
+                                            <canvas id="myChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="other-result" role="tabpanel" >
+                                        <div>
+                                            <canvas id="myChart2"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="share-result" role="tabpanel" >
+                                        <div style="padding:20px">
+                                          <div class="d-grid gap-2 col-6 mx-auto">
+                                            <button type="button" class="btn btn-primary btn-fb" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A5000%2Fshare%3Fuser%3D{{user_id}}&amp;src=sdkpreparse','_blank')">
+                                              <i class="bi bi-facebook"></i> Share on Facebook
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-twitter" onclick="window.open('https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A5000%2Fshare%3Fuser%3D{{user_id}}','_blank')">
+                                              <i class="bi bi-twitter"></i> Share on Twitter
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-copy-link" onclick="navigator.clipboard.writeText('http://127.0.0.1:5000/share?user={{user_id}}');alert('Link copied!');">
+                                              <i class="bi bi-link-45deg"></i> Copy Link
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tutorial Modal -->
+                <div class="modal fade" id="tut-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 style="padding-left: 135px ; padding-right: 135px " class="modal-title" id="ModalLabel">How To Play</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="main-text">
+                                    <h1 style=" padding-top: 20px ; padding-bottom: 20px ; padding-left: 5px ; padding-right: 5px "> Welcome to Word Sweeper!</h1>
+
+                                    <h4 style=" padding-top: 20px ; padding-bottom: 20px ; padding-left: 5px ; padding-right: 5px ">Traditional Minesweeper with a word-based twist! </h4>
+      
+                                    <p style=" padding-top: 25px ; padding-bottom: 10px ; padding-left: 5px ; padding-right: 5px "> Your objective is to discover the daily word in as few guesses as possible!</p>
+      
+                                    <p style=" padding-top: 5px ; padding-bottom: 10px ; padding-left: 5px ; padding-right: 5px ">The 25 letters of the alphabet (excluding 'x') are scattered across the board, selecting a tile will reveal one of the letters and the number of bombs nearby.</p>
+                                    
+                                    <p style=" padding-top: 5px ; padding-bottom: 10px ; padding-left: 5px ; padding-right: 5px ">Watch out for the bombs hidden across the board, selecting a bomb will cost you a precious guess!</p>
+                                    
+                                    <p style=" padding-top: 5px ; padding-bottom: 10px ; padding-left: 5px ; padding-right: 5px ">Once you think you’ve figured out the word, submit your guess and solve the Word Sweeper!</p>
+                                    
+                                    <p style=" padding-top: 5px ; padding-bottom: 10px ; padding-left: 5px ; padding-right: 5px ">A new word will be available on Word Sweeper every day!</p>
+                               
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var word = {{word | tojson}};
+        var seed =  {{seed | tojson}};
+        var attempted =  {{attempted | tojson}};
+
+    </script>
+    <script src="static/index.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (attempted == 1) {
+                document.querySelector(".wrapper2 button").style.pointerEvents = "none";
+                document.querySelector(".wrapper2 input").style.pointerEvents = "none";
+                document.querySelector(".wrapper2").style.cursor = "not-allowed";
+            }
+        })
+    </script>
+    <script>
+    </script>
+</body>
+
+</html>

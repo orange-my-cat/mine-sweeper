@@ -1,0 +1,214 @@
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+
+    <!-- Bootstrap JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Chart.js-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <title>Word Sweeper Achievement</title>
+
+    <link rel="icon" href="../static/mine.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../static/mine.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../static/mine.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../static/mine.png">
+    <link rel="apple-touch-icon-precomposed" href="../static/mine.png">
+
+    <meta property="og:title" content="Word Sweeper">
+    <meta property="og:locale" content="en_US">
+    <meta name="description" content="Look at what my score at Word Sweeper!">
+    <meta property="og:description" content="Look at what my score at Word Sweeper!">
+    <meta property="og:url" content="http://127.0.0.1:5000/">
+    <meta property="og:site_name" content="Word Sweeper">
+    <meta property="og:image" content="http://127.0.0.1:5000/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+</head>
+
+<body style="background-color: #5a5c66;">
+    <div class="modal" id="stats-modal" data-backdrop="static" data-keyboard="false"
+        style="position: static; display: block;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Statistics</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="self-tab" data-bs-toggle="tab"
+                                data-bs-target="#self-result" type="button" role="tab" aria-controls="self-result"
+                                aria-selected="true">Result</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other-result"
+                                type="button" role="tab" aria-controls="other-result" aria-selected="false">Compare to
+                                Others</button>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="self-result" role="tabpanel"
+                            aria-labelledby="Your Result">
+                            <div>
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="other-result" role="tabpanel"
+                            aria-labelledby="Compare to Others">
+                            <div>
+                                <canvas id="myChart2"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-lg" onclick="window.location.href='/';"
+                        style="margin: auto;">PLAY NOW!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const user = urlParams.get('user')
+        document.addEventListener("DOMContentLoaded", () => {
+            function getPastData() {
+                const request = new XMLHttpRequest();
+                request.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var raw_data = JSON.parse(request.responseText);
+                        var current_date = new Date();
+                        var old_date = new Date();
+                        old_date.setDate(old_date.getDate() - 7);
+                        let chartStatus = Chart.getChart("myChart"); // <canvas> id
+                        if (chartStatus != undefined) {
+                            chartStatus.destroy();
+                        }
+                        let chartStatus2 = Chart.getChart("myChart2"); // <canvas> id
+                        if (chartStatus2 != undefined) {
+                            chartStatus2.destroy();
+                        }
+                        console.log(raw_data);
+                        // ** SETUP
+                        const data = {
+                            datasets: [{
+                                label: "Your Score",
+                                backgroundColor: "rgb(17,78,111)",
+                                borderColor: "rgb(17,78,111)",
+                                data: raw_data[0],
+                            },],
+                        };
+                        // ** SETUP
+                        const config = {
+                            type: "line",
+                            data: data,
+                            options: {
+                                scales: {
+                                    x: {
+                                        type: "time",
+                                        time: {
+                                            unit: "day",
+                                            tooltipFormat: "yyyy-MM-dd",
+                                        },
+                                        min: old_date,
+                                        max: current_date,
+                                    },
+                                    y: {
+                                        max: 10,
+                                        beginAtZero: 1,
+                                        ticks: {
+                                            stepSize: 1,
+                                        },
+                                    },
+                                },
+                            },
+                        };
+                        // ** SETUP
+                        const ctx = document.getElementById("myChart").getContext("2d");
+
+                        myChart = new Chart(ctx, config);
+
+                        // ** SETUP
+                        const data2 = {
+                            datasets: [{
+                                label: "Your Score",
+                                backgroundColor: "rgb(17,78,111)",
+                                borderColor: "rgb(17,78,111)",
+                                data: raw_data[0],
+                            }, {
+                                label: "top 90%",
+                                borderColor: "rgb(255, 97, 80)",
+                                data: raw_data[1],
+                                borderDash: [10, 5],
+                            }, {
+                                label: "top 50%",
+                                borderColor: "rgb(26, 192, 198)",
+                                data: raw_data[2],
+                                borderDash: [10, 5],
+                            }, {
+                                label: "top 10%",
+                                borderColor: "rgb(88, 179, 104)",
+                                data: raw_data[3],
+                                borderDash: [10, 5],
+                            },],
+                        };
+                        // ** SETUP
+                        const config2 = {
+                            type: "line",
+                            data: data2,
+                            options: {
+                                scales: {
+                                    x: {
+                                        type: "time",
+                                        time: {
+                                            unit: "day",
+                                            tooltipFormat: "yyyy-MM-dd",
+                                        },
+                                        min: old_date,
+                                        max: current_date,
+                                    },
+                                    y: {
+                                        max: 10,
+                                        beginAtZero: 1,
+                                        ticks: {
+                                            stepSize: 1,
+                                        },
+                                    },
+                                },
+                            },
+                        };
+                        // ** SETUP
+                        const ctx2 = document.getElementById("myChart2").getContext("2d");
+
+                        myChart2 = new Chart(ctx2, config2);
+                    }
+                };
+                var link = "/shareresult?user=" + user
+                request.open("GET", link);
+                request.send();
+            }
+            getPastData();
+        });
+    </script>
+</body>
+
+</html>
